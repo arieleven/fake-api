@@ -1,0 +1,28 @@
+# Run this repo's tests through testosterone:  testo run --cycle fake-api
+version: 1
+defaults:
+  target_repo: .
+  artifacts_root: artifacts
+  timeout_s: 300
+reporters:
+  - type: allure
+cycles:
+  fake-api:
+    description: Unit, API, Behave and browser tests for the Fake Doing Bullshit app.
+    stages:
+      - name: unit
+        equipment: pytest
+        args: ["-q", "-p", "no:cacheprovider", "tests/unit"]
+        tier: unit
+      - name: api
+        equipment: pytest
+        args: ["-q", "-p", "no:cacheprovider", "tests/api"]
+        tier: integration
+      - name: buttons
+        equipment: behave
+        args: ["features/buttons.feature"]
+        tier: integration
+      - name: ui
+        equipment: pytest
+        args: ["-q", "-p", "no:cacheprovider", "tests/e2e"]
+        tier: e2e

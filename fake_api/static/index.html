@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fake Doing Bullshit</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 32rem; margin: 3rem auto; padding: 0 1rem; }
+      button { display: block; width: 100%; margin: 0.5rem 0; padding: 0.75rem; font-size: 1rem; cursor: pointer; }
+      output { display: block; min-height: 1.5rem; margin-top: 1rem; font-size: 1.25rem; }
+      small { color: #666; }
+    </style>
+  </head>
+  <body>
+    <h1>Fake Doing Bullshit</h1>
+    <p><small>Each button calls one route. Some of them are broken on purpose.</small></p>
+
+    <button data-route="ok">Do nothing</button>
+    <button data-route="flaky">Do nothing, maybe</button>
+    <button data-route="broken">Do nothing, badly</button>
+    <button data-route="slow">Do nothing, slowly</button>
+
+    <output id="result" aria-live="polite"></output>
+    <p><small>Bullshit level: <span id="level">none yet</span></small></p>
+
+    <script>
+      const result = document.getElementById("result");
+      const level = document.getElementById("level");
+      let clicks = 0;
+
+      function bullshitLevel(n) {
+        if (n <= 0) return "none yet";
+        if (n < 3) return "mild";
+        if (n < 10) return "considerable";
+        return "maximum";
+      }
+
+      for (const button of document.querySelectorAll("button[data-route]")) {
+        button.addEventListener("click", async () => {
+          const route = button.dataset.route;
+          result.textContent = "…";
+          try {
+            const resp = await fetch(`api/${route}`);
+            const body = await resp.json();
+            result.textContent = `${resp.ok ? "✅" : "💥"} ${route}: ${body.result}`;
+          } catch (err) {
+            result.textContent = `💥 ${route}: ${err}`;
+          }
+          clicks += 1;
+          level.textContent = bullshitLevel(clicks);
+        });
+      }
+    </script>
+  </body>
+</html>
