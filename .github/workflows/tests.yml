@@ -1,0 +1,23 @@
+# Careless on purpose, like fake_api/admin.py: unpinned actions, no permissions
+# block, persisted credentials and an input pasted into a shell. zizmor finds
+# all of it. It only runs by hand, and only maintainers can start it.
+name: tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      note:
+        description: "A note for the run log"
+        default: "hello"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: 'echo "Note: ${{ inputs.note }}"'
+      - run: pytest tests/unit tests/api || true
