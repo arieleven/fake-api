@@ -1,7 +1,7 @@
 # Fake API
 
 A deliberately silly API with a deliberately silly UI, built to be tested.
-It is the demo target for [testosterone](https://github.com/taltal-beep/testosterone):
+It is the demo target for [QASight](https://github.com/arieleven/qasight):
 some parts work, some fail on purpose, so a test run always has something to show.
 
 | Route | Button | Behaviour |
@@ -40,3 +40,13 @@ behave features/buttons.feature
 
 With testosterone installed, `testo run --cycle fake-api` runs all four layers as one
 cycle (see `testosterone.yaml`) and puts the results in its dashboard.
+
+## Code quality (bad on purpose)
+
+The tests show broken behaviour; `fake_api/admin.py`, two old pins in
+`requirements.txt` and `.github/workflows/tests.yml` show broken code. They hold
+the kind of problems a scanner should catch: hard-coded secrets, SQL and shell
+commands built from user input, md5 for passwords, `pickle` on a request body,
+TLS checks turned off, packages with known vulnerabilities, unpinned actions and
+an input pasted into a shell step. QASight's Code quality page scores this repo
+low with every one of them listed. Run the app on localhost only.

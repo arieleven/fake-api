@@ -18,11 +18,12 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.responses import FileResponse, JSONResponse
 
-from fake_api import logic
+from fake_api import admin, logic
 
 STATIC_DIR = Path(__file__).parent / "static"
 
 app = FastAPI(title="Fake API")
+app.include_router(admin.router)
 
 
 @app.get("/", include_in_schema=False)
